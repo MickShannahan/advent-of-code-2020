@@ -456,6 +456,14 @@ let testInput7 = ['light red bags contain 1 bright white bag, 2 muted yellow bag
   'faded blue bags contain no other bags.',
   'dotted black bags contain no other bags.']
 
+let testInput72 = ['shiny gold bags contain 2 dark red bags.',
+  'dark red bags contain 2 dark orange bags.',
+  'dark orange bags contain 2 dark yellow bags.',
+  'dark yellow bags contain 2 dark green bags.',
+  'dark green bags contain 2 dark blue bags.',
+  'dark blue bags contain 2 dark violet bags.',
+  'dark violet bags contain no other bags.']
+
 function day7part1(input) {
   let count = 0
   let dict = {}
@@ -480,7 +488,7 @@ function day7part1(input) {
       bags.push(key)
     }
   }
-  // console.log(dict)
+  console.log(Object.keys(dict).length)
   return bags
 }
 
@@ -493,6 +501,9 @@ function bagfinder(dict, bag) {
     if (key != 'other bags.') {
       if (key != 'containsGold') {
         gold = bagfinder(dict, dict[key])
+        if (gold) {
+          break;
+        }
       }
     }
   }
@@ -501,7 +512,49 @@ function bagfinder(dict, bag) {
 
 
 // console.log("result test", day7part1(testInput7))
-console.log("result", day7part1(input7))
+// console.log("result", day7part1(input7))
+
+
+function day7part2(input) {
+  let count = 0
+  let dict = {}
+  for (let i = 0; i < input.length; i++) {
+    let rule = input[i].split(" contain ")
+    let topBag = rule[0].split(' bags')[0]
+    dict[topBag] = {}
+    rule[1].split(', ').forEach(e => {
+      let num = +e[0]
+      let bag = e.split(' ').splice(1, 2).join(' ')
+      dict[topBag][bag] = num
+    });
+  }
+  let bags = 0
+  for (let key in dict["shiny gold"]) {
+    for (let i = 0; i < dict['shiny gold'][key]; i++) {
+      bags++
+      bags += bagfinder(dict, dict[key])
+    }
+  }
+  return bags
+}
+
+function bagfinder(dict, bag) {
+  let bags = 0
+  for (let key in bag) {
+    if (key != "other bags.") {
+      for (let i = 0; i < bag[key]; i++) {
+        debugger
+        bags++
+        bags += bagfinder(dict, dict[key])
+      }
+    }
+  }
+  return bags
+}
+
+
+// console.log("result", day7part2(testInput72))
+// console.log("result", day7part2(input7))
 
 
 
@@ -677,3 +730,166 @@ function day9Part2(input, preamble) {
 
 // console.log(day9Part2(input9, 25))
 // console.log(day9Part2(testInput9, 5))
+// REVIEW day 10
+let input10 = ['126', '38', '162', '123', '137', '97', '92', '67', '136', '37', '146', '2', '139', '74', '101', '163', '128', '127', '13', '111', '30', '117', '3', '93', '29', '152', '80', '21', '7', '54', '69', '40', '48', '104', '110', '142', '57', '116', '31', '70', '28', '151', '108', '20', '157', '121', '47', '75', '94', '39', '73', '77', '129', '41', '24', '44', '132', '87', '114', '58', '64', '4', '10', '19', '138', '45', '76', '147', '59', '155', '156', '83', '118', '109', '107', '160', '61', '91', '102', '115', '68', '150', '34', '16', '27', '135', '161', '46', '122', '90', '1', '164', '100', '103', '84', '145', '51', '60']
+
+
+// REVIEW day 11
+
+let input11 = ['LLLLLLLL.LLL.LLLLLLLLLLLLL.LL.LLLLLL.LL.LLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLL.LLLLLLLL', 'LLLLLLLL.LLLLLLLLLL.LLLLLLLLL.LLLLLL.LLLLLL.LL.LLLLLLL.LLLLLL.LLLLLLLLL.LLLL.LLLLL.LLLLLLLL', 'LLLLLLLL.LLLLL.LLLL.LLL.LLLLLLLLLLLL.LLL..LLLLLL.LLLLL.LLLLLL.LLLLLLLLLLLLLLLLLLLL.LLLLLLLL', 'LLLLLLLL.LLLLL.LLLL.LLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLL', 'LLLLLLLL.LLLLL.LL.L.LLLLLLLLLLLLLLLL..LLLLLLLL.LLLLLLLLLLLLLLLLLLLL.LLLLLLLL.LLLLLLLLLLLLLL', 'LLLLLLL.LLLLLLLLLLL.LLLLLLLLL.L.LLLLLLLLLLLLL..LLLLLLL.LLLLLL.LLLLL.LLLLLLLLLLLLLL.LL.LLLLL', '..L.L...L....L......LL.LLL..L.L.L.L...L.........LLLL..L..L...LL..L.L.L.....LLLLL..L..L..L..', 'LLLLLLLL..LLLLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLLLLLLLLLLL.LLL.LLLLLL.LLLLLLLL', 'LLLLLLLLLLLLLLLLLL..LLLLLLLLL.LLLLLLLLLL.LL.LLLLL.LLL..LLLLLLLLLLL..LLLL.LLLLLLLLL.LLLLLLLL', 'LLLLLLLLLLLLLL.L.LL.LLLLLLLLL.LLLLLL.LLLLLLLLL.LLLLL.L.LLLLLL.LLLLLLLLLLLLLLLLL.LL.LLLLLLLL', 'LLLLLLLL.LLLLL.LLLL.LLLLLLL.L..LLLLLLLLLL.LLLLL.LLLLLL.LLLLLL.L.LLLLLLLLLLLL.LLLLL.LLL.LLLL', 'LLL.LLLL.LLLLL.LLLL.LLLLLLLLL.LLLLLL.LLLLLLLLL.LLLLLLLLLLLLLL.LL.LL.LLLLLLLLLLLLLL.LLLLLLLL', 'LLLLLLLL.LLLLL.LLLLLLLL.LLLLL.LLLLLL.L.LLLLLLL..LLLL.L.LLLLLLLLLLLL.LLLLLLLLLLLLLLLLLLLLLLL', 'LLLLLLL.LLLLLL.LL.L.LLLLLLLL..LLLLLLLLLLLLL.LLLLLLLLLL.LL.LLL.LLLLL.LLLLLL.L.LLLL..LLLLLLLL', 'LLLLLLLL.LLLLL.LLLL..LLLLLLLL.LLLLLL.LLLLLLLLL.LLLLLLL.LLLLLL.LLLLLLLLLLL.LL..LLLL.LLLLLLLL', 'LLLLLLLLLLLLLL.LLLLLLLLLLLLLL.LLLLLLL.LLLLLLL..L.LLLLLLLLLLLL.LLLLL.LLLLLL.L.LLLLL.LLLLLLLL', '.L.LL....LLL..L.......L...LLLL..LLL....L..L...L.....L...L...LL......L.....L......L........L', 'LLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL...LLLLLLLL.LL.LLLL.LLLLL..LLL.L.LLLLLLLL.LLLLLLLLLLLL.L', 'LLLLLLLL.LLLL.LLLLL.LLLLLLLLL.LL.L.LLLLLLLLLL..LLLLLLLLLLLLLL.LLLLL.LLLLLLLL.LLLLL.LLLLLLLL', 'LLLLLLLL.LLLLL.LLLLLLLLLLLLLL.LLLLL.LLLLLLLLLL.LLLLLLL.LL.LLL.LLLLLLLLLLLLLL.LLLLL.LLLLLLLL', 'LLLLLLLL.LLLLL.LLLL.LLLLLLLLL..LLLLL.LLLLLLLLLLLLLLLLL.LLLLLL.LL.LLLLLLLL.LL.LLLLL.LLLLLL.L', '.LLLLLLLL.LLLL.LLLL.LLLLLLLLL.L.LLLL.LLLLLLLL..LL.L.LL.LLLLLL.L.LLL.L.LL.LL..LLLLL.LLLLLLLL', 'LLLLL.LLLLLLLL.LLLL.LLLLLLLLL.LLLLL.LLLLLLLLLL.LLL.LLLLLLLLLL.LLLLL.LLLLLLLL.LLLLLLLLLL.LLL', 'L..L.L..L....L....L.....LL.L.LL.L...L.L.LL..LL.L.....L.L...L....LL.L....LL........L..LL...L', 'LLLLLLLL.LLLLL.LLLLLLL.LLLLLL.LLLLLL.LLLLLLLLL.LLLLLLLLLLLLLLLLLLLL..LLLL.LL.LLLLLLLLLLLLLL', 'LLLLLLLL.LLLLL.LLLL.LLLLL.L.LLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLL..LLLLL.LLLLLLLL.LLLL..L.LLLLLL', 'LLLLLLLL...LLL.LLLL..LLLLLLL..LLLLLL.L.LLLLLLLLLLL.LLLLLLLLLL.LLLLL.LLLLLLLL.LLLLLLLLLLLLLL', 'LLL.LLLL.LLLLLLLLLL.LLLLLLLLL.LLLLLLLLLLLLLLLL.LLLL.LL.LLLLLLLLLLLL.LLLLLLLL.LLLLL.LLL..LLL', 'LLLLLLLLLLLLLL.LLLL.LLLLL.LLLLLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLL.LLLLLLLLLLLLLL.LLLLL.LLLLLLLL', 'LL.LL.LLLLLLLLLLLLLL.LLLLLLLL.LLLLLLLLLLLLLLLL.LLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLL.LLLLLLLLLLL', 'LLLL.LLL.L.LLL.LLLL.LLLLLLLLL.L.LLLL.LLLLL.LLL.LLLLL.L.LLLLLL.LLLLL.LLLLLLLL.LLLLLLLLLLLLLL', '.L........L...L.....LL..L..L......L.L.LLL.L.LL..LL....LLL..L.L..LLLL...LLLL...L..........LL', 'LLLLLLL.LLLLLL.LLLL.LLLLLLLLL.LLLLLLLLLLLLL.LLLLL.LLLL.LLLLLL.LLLLL.LLLLLLLL.LLLLL.LLLLLLL.', 'LLLLLLLL.LLLLL..LLL.LLLLLLLLL.LLLLLL.LLLLLLLL..LLLLLLL.LLLLLL.LLLLLLLLLLLLLLLL.LLL.LLLLLLLL', 'LLLLLLLL.LLLLLLL.LL.LLLLLLLLLLLLLLLLLLLLLL.LLL.LLLLLLL.LLLLLL.LLLLL.LLLLLLLLL.LLLL.LLLLLLLL', '.LLLLLLL.LLLLL.LLLL.LLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLLL.LL.LLL.LLLLLLLLLLLLLLLLLLLL.LLLLLLLL', 'LLL.LLLL.LLLLL.LLLL.LLLLLLLLL.LLLLLL.LLLLLLL.L.LLLLLLL.LLLLL...LLLL.LLLLLLLL.LLLLL.LLLLLLLL', 'LLLLLLLL.LLL.L.LLLLLLLLLLLLLL.LLLLLLLLLLL.LLLL.LLLLLLL.LLLLLL.LLLLL.LLLLLLLLLL.LLL.LLLLLLLL', 'LLLLLLLL.LLLLL.LLLL.L.LLLLLLLLLLLLLL.LLL.LLLLL.LLLL.LL.LLLLLLL.LL.L.LLLLLLLL.LLL.L.LLLLLLLL', '.LLLLLLLLLLLLL.LLLL.LLLLLLLLL.LLLLLLLLLLLLLL.L.LLLLLLL.LLLLLL.LLLLL.LLLLLLLLLLLLLLLLLLLLLLL', 'LLLLLLLL.LLLLLLLLLL.LLLLLLL.LLL.LLLLLLLLLLLLLLLLLLL.LL.LLLLLLLLLLLL.LLLL.LLL.LL.LL.LLLLLLLL', '.L....L........L.L.L......LL..L.L.L...LLLL.....L...L..........LL.LLLL.L...L.L.LL.LL.L...L.L', 'LLLLLLLL.LLLL.LLL.L..L.LLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL.L.LLLLLLLLLLLLLLLLLLLL.LLLLLLLL', 'LLLL.LLL.LLLL..LLLL.LL.LLLL.LLLLLLLL.LLL.LLLLLLLLLLLLLLLLLLLL.LLLLL.LLLLLLL..LLLL.LLL.LLLLL', 'LLLLLLLL..LLLLLL.LL.LLLLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLL.LLLLLL.LLLLL.LLLL.LLL.LLLLL.LLLLLLLL', 'LLLLLLLLLLLLLLL.LLLLLLLLLLLLL.LLLLLLLLLLLLL.LLLLLLLLLL.LLL.LL..LLLLLLLLLLLLL.LLL.L.LL.L.LLL', 'LLLLLLLLLLLLL..LL.LLLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLLL.LLLLLL.LLLLL.LLLLLLLL.LLLLLLLLLLLLLL', 'LLL.LLLL.LLLLL.LLLL..LLLLL.LLLLLLLLL.LLLL..LLLLLLLLLL..LLLLLLLLLLLL.LLLLLLLLLLLLLL.LLL.LLLL', 'LLLLLLLL.LLLLL.LLLL.LLLLLLLLL.LLLLLL.LLLLLLLLL.LLLLLLL.LLLLLL.LLLLLLLLLLLLLLLLLLLL.LLLLLLLL', 'L.L.LLLL.LLLLL.LL.L.LLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLL.LLLLLLLLL.LLL.LLLLLLLLLLLLLLLLLLLLLL', '..LLLL.........L.LL.LL....L.LL...LLLL....L...L........LL...L.L......L.LLL.L.L...LL....L...L', 'LLLLLLLL.LL.LL.LLLL.LLLL.LLLLLLL.LLL.LLLLLLLLL.LLLLLL.LLLLLL..LLLLL.LLLLL.LLLLLLLLLLLLLLLLL', 'LLLLLL.LLLLLLL.LLLL.LLLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLL..LLLLLL.L.L.L.LLL.LLLLLLLLLL.LLLLLLLL', 'LLLLLLLL.LLLLL.LL.L.LLLLLLLLLLLLLLLLLLLLLLLL.L.LLLL.LL.LLLLLL.LLLLL.LLLLLLLL..LLLL.LLLLLLLL', 'LLLLL.LL.LLLLL.LLLLLLLLLLLLLLLLLLLLL.L.LLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLLLLL.LLLLLLLL', 'LLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLL.LLLLLL.LLLL.LLLLL..LLLLL.L.LLLLLL.LLLLL.LLLLLLLL', 'LLLLLLLLLLLLLL.LLLL.LLLLLLLLL.LLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLL.LLLLLLLLLLLLLL.LLLL.LLL', 'LLLLLLLL.LLLLL.LLLL.LLLLLLLLL.LLLLLL.LLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLL.LLLLLLLL', 'L.....LL..L..L.L..L....L.L......LL..L......L.LL..L..L..L...L..L...L.....L......LLLLLL......', 'LLLLL.LLLLLLLLLLLLL.LLLLLLLLLLLLLLLL..LLLLLLLLLLLLLLLL.LLLLL.L.LLLL.LLLLLLLL.LLLLL.LLLLLLL.', 'LLLLLLLL.LLLLL.LLLL.LLLLLL.LL.LLLLLL.LLLLLLLLL.LLLLL.L.LLLLLL.LLLLL.LLLL.LLL.LLLLLLLLLLLLL.', 'LL.LLLLL.LLLLL.LLLL.LLLLLLLLLL.LLLLLLLLLLLLLLL.LLLLLLL..LLLLLLLLLLLLLLLLLLLL.LLLLL.LLLLLLLL', '.LLLLLLLLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLL.LLLLL.LLLLLLLL.LLLLLLLLLLLLLL', 'L....L.LL.LLL.L...LL.L....LL..........L.L..L.....LL...L.....LL......L...LLLL.L.....L.LL.L..', 'LLLLLLLL.LLL.LLLL.L.LLLLLL.LL.LLLLLL.LLLLLLLLLLLLLLLLL.LLLLLL.LLLLLLLLLLLLLL.LLLLL.LLL.LLLL', 'LL.LLLL..LLLLL..LLL.LLLLLLLLL.LLLLLL.LLLLLLLLL.LLLLLL..LLLLLLLLLLLL.LLLLLLLL.LLLLL.LLLL.LLL', 'LLLLLL.L.LLL.L.L.LL.LLLLLLLLLLLLLLLL.LLLL.LLLL.L..L.LL.LLLLLL.LLLLLL.LLLLLLL.LLLLL..LLLL.LL', 'LLLLLLLL.LLLLL.LLLLLLLLLLLLLLLLLLLLL..LLLLLLLL...LLLLLLLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLL', 'LLLLLLLL.LLLLL.LL.L.LLLLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLL.LLL.LLLLL.LLLLLLL..LLLLL.LLLLLLLL', 'LLLLLL.LLLLLLL..LLLLLLLLLL.LLLLLLLLL.LLLLLL.LL.LLLLLLL.LLLLLL.LLLLLLLLLL.LLLLLLLLLL.LLLLLLL', 'L......L....L...L..L...L..L.LLL.LLLL....L...L.L.L....L..L...LLL.LLL...L......LL....L...L.LL', 'LLLLLLLL.LLLLL.LLL..LL.LLLLLLLLLLLLL.LLLLLLLLL.LLLLLLLLLLLLL..L.LLLLLLLLLL.LLLLLLLL.LLLLLLL', 'LLLLLLLL.LLLLLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLLLLLLLLLLLL.LLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLL', 'LLLLLLLL.LLLLL.LLLL.LLLLLLLLLLLL.LLLLLLLLLLLLL.LLLLLLL.LLLLLL.LLLLLLLLLLLLLLLLLLL..LLLLLLLL', 'LLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLLLLLLLL.LLLLLLLL.LLLLL.LLLLLLLL', 'LLLL.LLL.LLLL..LLLL.L.L.LLLLL.LL.L.L.LLLLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLL', 'LLLLLLLLLLLLLLLLLL..L.LLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLL.LLLLLLLLLLLL.LLLLLLLLLLLLLLL.LLLLLLL', 'LL.LLLLL.LLLLL.LLLL.LLLLLLLLLLLLLLLLLLLLLLLL.LL.LLLLLLLLLLLL..LLLLL.LLLLLLLL.LLLLL.LLLLLLLL', 'LLLLLLLL.LLLLL.LLLLLLLLLLLLLL.LLLLLL.LLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLL.LL.LLLLL.LLLLLLLL', 'LLLLLLLL.LLLLL.LLL.LLLLLLLLLL.LLLLLLLLLLLLLLL..LLLLLLL.LLLLLL.LLLLL.LLLLLLLL.LLLLL.LLLLLLLL', '.LLL.L..L...L.L...L...LL.L..LL.L...LLL.L.L...L...L.LLL..L.......L....L..L......LL..........', 'LLLLLLLL.LLLLL.LLLL.LL.LLLLLLLLLLLLL.LLLLLLLLL.L.LLLLL.LLLLLL.LLLLL.LLLLLLLL.LLLLL.LLLLLLLL', 'LLLLLLLL.LLLLLLLL.LLLLLLLLLLL.LLLLLLLLLLLLLLLL.LLLLLLL.LLLLLL.LLLLLLLLLLLLLL.LLLL..LLLL.LL.', 'LLLLLLLL.L.LLLLLLLLLLLLLLLLLLLLL.LLL..LLLLLLLL.LLLLLLL.LLL.LLLLLLLL.LLLLLLLL.LLLL..LLLLLLLL', 'LLLLLLLL.LLLLL.LLLL.LLLLLLLLL.LLLLLL.LLLLLLLLLLLLLL.LL.LLLLLLLLLLLLLLLLLLL.L..LLLL.LLLLLLLL', 'LLL.LLLL.LLLLL.LLLL.LLLLLLL.LLLLLLLL.LL.LLLLLL.LLLLLLL.LLLLLL.LLLLL.LLLLLL.L.LLLLLLLLLLLLLL', 'LL.LLLLL.L.LLL.LLLL.L.LLLLLLLLLLLLLL..LLLLLLLL.LLLLLLL.L.LLLL.LLL.L.LLLLLLLLLLLLLL.LLLLLLLL', 'LLLLLLLLLLLLLL.LLLL.LLLLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLLLLLLLLL.LLLLL.LLLLLLLLLLLLLLLLLLLLLLL', 'LL.LLLLL.LL.LLLLLLL.LLLLLLLLL.LLLL.L.LLLLLLLLL.LLLLLLL..LLLLL.LLLLL.LLLLLLLLLLLLLL.LLL.LLLL', 'LLLLLLLL.LLLLLLLLLL.LLLLLLLLL.LLLL.L.LLLLLLLLL.LLLL.LLLLLLLLL.LLLL.LLLLLLLLL.LLLLLLLLLLLLLL']
+
+let inputTest11 = ['L.LL.LL.LL', 'LLLLLLL.LL', 'L.L.L..L..', 'LLLL.LL.LL', 'L.LL.LL.LL', 'L.LLLLL.LL', '..L.L.....', 'LLLLLLLLLL', 'L.LLLLLL.L', 'L.LLLLL.LL']
+
+function day11Part1(input) {
+  let previous = []
+  let count = 0
+  for (let i = 0; i < 1000; i++) {
+    previous = input.map(i => i)
+    let seats = previous.map(i => i)
+    for (let r = 0; r < input.length; r++) {
+      let row = input[r]
+      for (let col = 0; col < row.length; col++) {
+        let chair = row[col]
+        let crowd = 0
+        if (chair != '.') {
+          // above check
+          if (input[r - 1]) {
+            if (input[r - 1][col - 1] == "#") {
+              crowd++
+            }
+            if (input[r - 1][col] == '#') {
+              crowd++
+            }
+            if (input[r - 1][col + 1] == '#') {
+              crowd++
+            }
+          }
+          // bellow check
+          if (input[r + 1]) {
+            if (input[r + 1][col - 1] == "#") {
+              crowd++
+            }
+            if (input[r + 1][col] == '#') {
+              crowd++
+            }
+            if (input[r + 1][col + 1] == '#') {
+              crowd++
+            }
+          }
+          // same level checks
+          if (input[r][col - 1]) {
+            if (input[r][col - 1] == '#') {
+              crowd++
+            }
+          }
+          if (input[r][col + 1]) {
+            if (input[r][col + 1] == '#') {
+              crowd++
+            }
+          }
+          // change checks
+          if (chair == '#') {
+            if (crowd > 3) {
+              let el = seats[r].split('')
+              el.splice(col, 1, "L")
+              count--
+              seats.splice(r, 1, el.join(""))
+              crowd = 0
+            }
+          } else if (chair == 'L') {
+            if (crowd < 1) {
+              let hash = seats[r].split('')
+              hash.splice(col, 1, "#")
+              count++
+              seats.splice(r, 1, hash.join(""))
+              crowd = 0
+            }
+          }
+        }
+      }
+    }
+    input = seats.map(i => i)
+  }
+  console.log(input)
+  return count
+}
+
+// console.log(day11Part1(inputTest11))
+// console.log(day11Part1(input11))
+
+function day11Part2(input) {
+  let previous = []
+  let count = 0
+  for (let i = 0; i < 1000; i++) {
+    previous = input.map(i => i)
+    let seats = previous.map(i => i)
+    for (let r = 0; r < input.length; r++) {
+      let row = input[r]
+      for (let col = 0; col < row.length; col++) {
+        let chair = row[col]
+        let crowd = 0
+        if (chair != '.') {
+          // above check
+          if (input[r - 1]) {
+            if (input[r - 1][col - 1] == "#") {
+              crowd++
+            }
+            if (input[r - 1][col] == '#') {
+              crowd++
+            }
+            if (input[r - 1][col + 1] == '#') {
+              crowd++
+            }
+          }
+          // bellow check
+          if (input[r + 1]) {
+            if (input[r + 1][col - 1] == "#") {
+              crowd++
+            }
+            if (input[r + 1][col] == '#') {
+              crowd++
+            }
+            if (input[r + 1][col + 1] == '#') {
+              crowd++
+            }
+          }
+          // same level checks
+          if (input[r][col - 1]) {
+            if (input[r][col - 1] == '#') {
+              crowd++
+            }
+          }
+          if (input[r][col + 1]) {
+            if (input[r][col + 1] == '#') {
+              crowd++
+            }
+          }
+          // change checks
+          if (chair == '#') {
+            if (crowd > 3) {
+              let el = seats[r].split('')
+              el.splice(col, 1, "L")
+              count--
+              seats.splice(r, 1, el.join(""))
+              crowd = 0
+            }
+          } else if (chair == 'L') {
+            if (crowd < 1) {
+              let hash = seats[r].split('')
+              hash.splice(col, 1, "#")
+              count++
+              seats.splice(r, 1, hash.join(""))
+              crowd = 0
+            }
+          }
+        }
+      }
+    }
+    input = seats.map(i => i)
+  }
+  console.log(input)
+  return count
+}
+
+// console.log(day11Part2(inputTest11))
+console.log(day11Part2(input11))
