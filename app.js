@@ -740,6 +740,17 @@ let input11 = ['LLLLLLLL.LLL.LLLLLLLLLLLLL.LL.LLLLLL.LL.LLLLLLLLLLLLLL.LLLLLLL.L
 
 let inputTest11 = ['L.LL.LL.LL', 'LLLLLLL.LL', 'L.L.L..L..', 'LLLL.LL.LL', 'L.LL.LL.LL', 'L.LLLLL.LL', '..L.L.....', 'LLLLLLLLLL', 'L.LLLLLL.L', 'L.LLLLL.LL']
 
+let inputTest112 = ['L.LL.LL.LL',
+  'LLLLLLL.LL',
+  'L.L.L..L..',
+  'LLLL.LL.LL',
+  'L.LL.LL.LL',
+  'L.LLLLL.LL',
+  '..L.L.....',
+  'LLLLLLLLLL',
+  'L.LLLLLL.L',
+  'L.LLLLL.LL']
+
 function day11Part1(input) {
   let previous = []
   let count = 0
@@ -826,47 +837,61 @@ function day11Part2(input) {
     for (let r = 0; r < input.length; r++) {
       let row = input[r]
       for (let col = 0; col < row.length; col++) {
+        let dir = [false, false, false, false, false, false, false, false]
         let chair = row[col]
         let crowd = 0
         if (chair != '.') {
           // above check
-          if (input[r - 1]) {
-            if (input[r - 1][col - 1] == "#") {
-              crowd++
-            }
-            if (input[r - 1][col] == '#') {
-              crowd++
-            }
-            if (input[r - 1][col + 1] == '#') {
-              crowd++
-            }
-          }
-          // bellow check
-          if (input[r + 1]) {
-            if (input[r + 1][col - 1] == "#") {
-              crowd++
-            }
-            if (input[r + 1][col] == '#') {
-              crowd++
-            }
-            if (input[r + 1][col + 1] == '#') {
-              crowd++
-            }
-          }
-          // same level checks
-          if (input[r][col - 1]) {
-            if (input[r][col - 1] == '#') {
-              crowd++
-            }
-          }
-          if (input[r][col + 1]) {
-            if (input[r][col + 1] == '#') {
-              crowd++
+          debugger
+          for (let a = 1; a < input.length; a++) {
+            if (crowd < 5) {
+              if (input[r - a]) {
+                if (input[r - a][col - a] == "#" && !dir[0]) {
+                  dir[0] = true
+                  crowd++
+                } else if (input[r - a][col - a] == "L" && !dir[0]) { dir[0] = true }
+                if (input[r - a][col] == '#' && !dir[1]) {
+                  dir[1] = true
+                  crowd++
+                } else if (input[r - a][col] == "L" && !dir[1]) { dir[1] = true }
+                if (input[r - a][col + a] == '#' && !dir[2]) {
+                  dir[2] = true
+                  crowd++
+                } else if (input[r - a][col + a] == "L" && !dir[2]) { dir[2] = true }
+              }
+              // bellow check
+              if (input[r + a]) {
+                if (input[r + a][col - a] == "#" && !dir[3]) {
+                  dir[3] = true
+                  crowd++
+                } else if (input[r + a][col - a] == "L" && !dir[3]) { dir[3] = true }
+                if (input[r + a][col] == '#' && !dir[4]) {
+                  dir[4] = true
+                  crowd++
+                } else if (input[r + a][col] == "L" && !dir[4]) { dir[4] = true }
+                if (input[r + a][col + a] == '#' && !dir[5]) {
+                  dir[5] = true
+                  crowd++
+                } else if (input[r + a][col + a] == "L" && !dir[5]) { dir[5] = true }
+              }
+              // same level checks
+              if (input[r][col - a]) {
+                if (input[r][col - a] == '#' && !dir[6]) {
+                  dir[6] = true
+                  crowd++
+                } else if (input[r][col - a] == "L" && !dir[6]) { dir[6] = true }
+              }
+              if (input[r][col + a]) {
+                if (input[r][col + a] == '#' && !dir[7]) {
+                  dir[7] = true
+                  crowd++
+                } else if (input[r][col + a] == "L" && !dir[7]) { dir[7] = true }
+              }
             }
           }
           // change checks
           if (chair == '#') {
-            if (crowd > 3) {
+            if (crowd > 4) {
               let el = seats[r].split('')
               el.splice(col, 1, "L")
               count--
@@ -885,11 +910,13 @@ function day11Part2(input) {
         }
       }
     }
+    debugger
     input = seats.map(i => i)
   }
-  console.log(input)
   return count
 }
 
-// console.log(day11Part2(inputTest11))
-console.log(day11Part2(input11))
+// console.log(day11Part2(inputTest112))
+// console.time()
+// console.log(day11Part2(input11))
+// console.timeEnd()
