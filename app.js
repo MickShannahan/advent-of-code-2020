@@ -842,7 +842,7 @@ function day11Part2(input) {
         let crowd = 0
         if (chair != '.') {
           // above check
-          debugger
+          // debugger
           for (let a = 1; a < input.length; a++) {
             if (crowd < 5) {
               if (input[r - a]) {
@@ -910,13 +910,16 @@ function day11Part2(input) {
         }
       }
     }
-    debugger
+    // debugger
+    if(input.every((s,i)=> seats[i] == s)) return count
     input = seats.map(i => i)
+    console.log(input)
+    
   }
   return count
 }
 
 // console.log(day11Part2(inputTest112))
 // console.time()
-// console.log(day11Part2(input11))
+console.log(day11Part2(input11))
 // console.timeEnd()
